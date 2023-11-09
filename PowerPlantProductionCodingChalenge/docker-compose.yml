@@ -1,0 +1,19 @@
+﻿version: '3.8'
+
+services:
+  webapi:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    environment:
+      - ASPNETCORE_URLS=http://+:8888
+    volumes:
+      - type: bind
+        source: ./logs
+        target: /app/logs
+
+volumes:
+  logs:
+    name: webapi-logs
