@@ -4,10 +4,12 @@ namespace PowerPlantProduction.Core.Strategies
 {
     public abstract class MeritOrderStrategy
     {
+
         public List<Powerplant> WindPlants
         {
             get => Payload.Powerplants.Where(x => x.Type == "windturbine" && !TickedPlants.Contains(x.Name)).Select(x => x).OrderByDescending(x => x.Efficiency).ThenBy(x => x.Pmax).ToList();
         }
+
         public List<Powerplant> GasPlants
         {
             get => Payload.Powerplants.Where(x => x.Type == "gasfired" && !TickedPlants.Contains(x.Name)).Select(x => x).OrderByDescending(x => x.Efficiency).ThenBy(x => x.Pmax).ToList();
