@@ -1,0 +1,34 @@
+trigger:
+- main
+
+name: Deploy Bicep files
+
+variables:
+- group: PowerPlantProductionDev
+- name: vmImageName
+  value: "ubuntu-latest"
+- name: resourceGroupName
+  value: "rgPowerPlantProductionDev"
+- name: location
+  value: "northeurope"
+- name: azureServiceConnection
+  value: "ServicePrincipalHotmail"
+- name: templateFile
+  value: "./main.bicep"
+
+pool:
+  vmImage: $(vmImageName)
+
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: '$(azureServiceConnection)'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '$(resourceGroupName)'
+    location: '$(location)'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(templateFile)'
+    overrideParameters: '-storageAccountType Standard_LRS'
+    deploymentMode: 'Incremental'
+    deploymentName: 'DeployPipelineTemplate'
