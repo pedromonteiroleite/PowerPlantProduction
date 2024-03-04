@@ -1,6 +1,11 @@
+using Application.DailyTemperature.Queries.GetRecordedDailyTemperature;
 using Domain.Services;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -14,6 +19,12 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
+
+app.MapGet("/recordeddailytemperaturedb", async (IMediator mediator) =>
+    await mediator.Send(new GetRecordedDailyTemperatureQuery()) is var items
+        ? Results.Ok(items)
+        : Results.NotFound())
+    .WithName("recordeddailytemperaturedb");
 
 app.MapGet("/recordeddailytemperature", () =>
 {
@@ -34,5 +45,7 @@ app.MapGet("/newendpoint", () =>
     return "Hello world!";
 })
 .WithName("newendpoint");
+
+
 
 app.Run();
