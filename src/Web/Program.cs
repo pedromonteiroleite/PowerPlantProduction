@@ -29,4 +29,10 @@ app.MapGet("/dailytemperature", () =>
 })
 .WithName("dailytemperature");
 
+app.MapGet("/newendpoint", () =>
+{
+    return "Hello world!";
+})
+.WithName("newendpoint");
+
 app.Run();
