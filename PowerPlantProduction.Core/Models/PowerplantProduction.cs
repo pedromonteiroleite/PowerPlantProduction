@@ -1,4 +1,0 @@
-﻿namespace PowerPlantProduction.Core.Models
-{
-
-}
