@@ -1,27 +1,22 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities;
+using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 
 namespace Infrastructure.Data;
 
 public class ApplicationDbService : IApplicationDbService
 {
+    private readonly IConfiguration _configuration;
 
-    private static string DbSource = "";
-    private static string DbUser = "";
-    private static string DbPwd = "";
-    private static string DbName = "";
+    public ApplicationDbService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
 
     private SqlConnection GetConnection()
     {
-        var builder = new SqlConnectionStringBuilder
-        {
-            DataSource = DbSource,
-            UserID = DbUser,
-            Password = DbPwd,
-            InitialCatalog = DbName
-        };
-        return new SqlConnection(builder.ConnectionString);
+        return new SqlConnection(_configuration.GetConnectionString("SQLConnection"));
     }
 
     public List<RecordedDailyTemperature> GetRecordedDailyTemperature()

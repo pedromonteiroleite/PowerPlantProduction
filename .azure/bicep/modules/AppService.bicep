@@ -1,5 +1,5 @@
 param location string
-param appServiceAppName string
+param projectName string
 
 @allowed([
   'nonprod'
@@ -7,7 +7,8 @@ param appServiceAppName string
 ])
 param environmentType string
 
-var appServicePlanName = 'toy-product-launch-plan'
+var appServicePlanName = 'plan${projectName}'
+var appServiceName = 'app${projectName}'
 var appServicePlanSkuName = (environmentType == 'prod') ? 'P2v3' : 'F1'
 
 resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
@@ -19,7 +20,7 @@ resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
 }
 
 resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
-  name: appServiceAppName
+  name: appServiceName
   location: location
   properties: {
     serverFarmId: appServicePlan.id
