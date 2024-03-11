@@ -3,7 +3,7 @@ using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 
-namespace Infrastructure.Data;
+namespace Infrastructure.DataAccess;
 
 public class ApplicationDbService : IApplicationDbService
 {

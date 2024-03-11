@@ -46,6 +46,4 @@ app.MapGet("/newendpoint", () =>
 })
 .WithName("newendpoint");
 
-
-
 app.Run();
