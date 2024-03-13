@@ -1,5 +1,5 @@
-## In progress
+## .NET
 
 - MinimalAPI
 - CleanArchitecture
-- DeploymentSlots
+- Azure
