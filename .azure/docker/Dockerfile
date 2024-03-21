@@ -4,21 +4,11 @@ WORKDIR /source
 
 # Copy the solution file and project files
 COPY PowerPlantProduction.sln ./
-COPY src/Web/Web.csproj ./src/Web/
-COPY src/Application/Application.csproj ./src/Application/
-COPY src/Infrastructure/Infrastructure.csproj ./src/Infrastructure/
-COPY src/Domain/Domain.csproj ./src/Domain/
-COPY tests/Domain.Tests/Domain.Tests.csproj ./tests/Domain.Tests/
+COPY src/ ./src/
+COPY tests/ ./tests/
 
-# Restore dependencies
+# Restore dependencies and publish the application
 RUN dotnet restore
-
-# Copy the remaining source code and publish the application
-COPY src/Web/ ./src/Web/
-COPY src/Application/ ./src/Application/
-COPY src/Infrastructure/ ./src/Infrastructure/
-COPY src/Domain/ ./src/Domain/
-COPY tests/Domain.Tests/ ./tests/Domain.Tests/
 RUN dotnet publish -c Release -o out ./src/Web/Web.csproj
 
 # Second stage: Create the runtime image

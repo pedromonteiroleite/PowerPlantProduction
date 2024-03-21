@@ -1,4 +1,4 @@
-## Create azure container registry resource
+## Create azure container registry (acr)
 
       # Create container registry
       az acr create -n acrpowerplant -g rgPowerPlantProduction --sku Standard
@@ -17,19 +17,20 @@
       Write-Output "ACR Username: $acrUsername"
       Write-Output "ACR Password: $acrPassword"
 
-## Dockerfile
+## .azure/docker/Dockerfile
 
       # First stage: Build the application
       FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
       WORKDIR /source
 
-      # Copy the .csproj files and restore dependencies
-      COPY .azure/docker/*.csproj ./
-      RUN dotnet restore
+      # Copy the solution file and project files
+      COPY PowerPlantProduction.sln ./
+      COPY src/ ./src/
+      COPY tests/ ./tests/
 
-      # Copy the remaining source code and publish the application
-      COPY src/Web/ ./
-      RUN dotnet publish -c Release -o out
+      # Restore dependencies and publish the application
+      RUN dotnet restore
+      RUN dotnet publish -c Release -o out ./src/Web/Web.csproj
 
       # Second stage: Create the runtime image
       FROM mcr.microsoft.com/dotnet/aspnet:6.0
@@ -44,17 +45,23 @@
       # Set the entry point for the application
       ENTRYPOINT ["dotnet", "Web.dll"]
 
+
 ## Create image
 
+      # Sample using relative files located in folders other than the the context one
       docker build -f .azure/docker/Dockerfile -t powerplant_web_api .
 
-## Push image to registry
+## Push image to acr
+
+      # Tag image (MUST be tagged with acr name, otherwise it wont allow push)
+      docker tag powerplant_web_api_2 acrpowerplant.azurecr.io/powerplant_web_api_2
 
       # Login to acr
-      az acr login
-
-      # Build and tag image
-      docker build
+      az acr login --name acrpowerplant --username [] --password []
 
       # Push the image
-      docker push
+      docker push acrpowerplant.azurecr.io/powerplant_web_api_2
+
+## List acr images
+
+      az acr repository list -n acrpowerplant
