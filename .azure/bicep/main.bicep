@@ -4,15 +4,15 @@ param location string
   'nonprod'
   'prod'
 ])
-param environmentType string = 'nonprod'
+param environmentType string
 @description('A unique suffix to add to resource names that need to be globally unique.')
 @maxLength(13)
 param resourceNameSuffix string = uniqueString(resourceGroup().id)
-param sqlAdministratorUsername string = ''
+param sqlAdministratorUsername string
 @secure()
-param sqlAdministratorPassword string = ''
+param sqlAdministratorPassword string
 @secure()
-param myIpAddress string = ''
+param myIpAddress string
 
 module storageAccount 'modules/StorageAccount.bicep' = {
   name: 'storageAccount'
