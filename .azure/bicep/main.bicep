@@ -1,14 +1,14 @@
-param location string = 'northEurope'
 param projectName string = 'PowerPlant'
+param location string = ''
 @allowed([
   'nonprod'
   'prod'
 ])
-param environmentType string 
+param environmentType string = 'nonprod'
 @description('A unique suffix to add to resource names that need to be globally unique.')
 @maxLength(13)
 param resourceNameSuffix string = uniqueString(resourceGroup().id)
-param sqlAdministratorUsername string = 'Silva'
+param sqlAdministratorUsername string = ''
 @secure()
 param sqlAdministratorPassword string = ''
 @secure()
