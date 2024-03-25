@@ -1,5 +1,5 @@
-param projectName string = 'PowerPlant'
-param location string = ''
+param projectName string
+param location string
 @allowed([
   'nonprod'
   'prod'
