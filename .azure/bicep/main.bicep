@@ -1,3 +1,4 @@
+// TODO: https://azure.github.io/Azure-Verified-Modules/contributing/bicep/bicep-contribution-flow/validate-bicep-module-locally/
 param projectName string
 param location string
 @allowed([

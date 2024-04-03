@@ -5,11 +5,11 @@ using System.Data.SqlClient;
 
 namespace Infrastructure.DataAccess;
 
-public class ApplicationDbService : IApplicationDbService
+public class SqlServerDbService : IApplicationDbService
 {
     private readonly IConfiguration _configuration;
 
-    public ApplicationDbService(IConfiguration configuration)
+    public SqlServerDbService(IConfiguration configuration)
     {
         _configuration = configuration;
     }

@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IApplicationDbService, ApplicationDbService>();
+            services.AddScoped<IApplicationDbService, SqlServerDbService>();
             return services;
         }
     }
