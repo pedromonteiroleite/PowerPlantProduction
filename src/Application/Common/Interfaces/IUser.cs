@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.DataAccess
+namespace Application.Common.Interfaces
 {
-    internal class EntityFrameworkRepository
+    public interface IUser
     {
     }
 }
