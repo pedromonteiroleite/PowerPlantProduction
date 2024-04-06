@@ -3,7 +3,7 @@ using AutoMapper;
 using Domain.Entities;
 using MediatR;
 
-namespace Application.DailyTemperature.Queries.GetRecordedDailyTemperature;
+namespace Application.DailyTemperature.Queries.GetRecordedDailyTemperatures;
 
 public record GetRecordedDailyTemperatureQuery: IRequest<IEnumerable<RecordedDailyTemperatuteDto>>;
 

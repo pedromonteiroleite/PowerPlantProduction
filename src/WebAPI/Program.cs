@@ -1,14 +1,51 @@
-using Application.DailyTemperature.Queries.GetRecordedDailyTemperature;
-using Domain.Services;
+using Application.DailyTemperature.Commands.CreateDailyTemperature;
+using Application.DailyTemperature.Queries.GetRecordedDailyTemperatures;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure services
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
-
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+    .RequireAuthenticatedUser()
+    .Build();
+});
+builder.Services.AddSwaggerGen(x =>
+{
+    x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using bearer scheme",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey, 
+        Scheme = "Bearer" 
+    });
+
+    // Add the Bearer token authentication requirement to all operations
+    x.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Id = "Bearer", 
+                    Type = ReferenceType.SecurityScheme
+                }
+            },
+            new List<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 
@@ -18,32 +55,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapGet("/recordeddailytemperaturedb", async (IMediator mediator) =>
-    await mediator.Send(new GetRecordedDailyTemperatureQuery()) is var items
+app.MapGet("/dailytemperatures", async (IMediator mediator) =>
+    await mediator.Send(new GetDailyTemperatureQuery()) is var items
         ? Results.Ok(items)
         : Results.NotFound())
-    .WithName("recordeddailytemperaturedb");
+    .WithName("getDailyTemperatures")
+    .Produces<IEnumerable<DailyTemperatureDto>>()
+    .AllowAnonymous();
 
-app.MapGet("/recordeddailytemperature", () =>
+app.MapPost("/dailytemperatures", async (CreateDailyTemperatureCommand command, IMediator mediator) =>
 {
-    var temperatureService = new DailyTemperatureService();
-    return temperatureService.GenerateTemperatureRecs().ToArray();
+    var createdTemperatureId = await mediator.Send(command);
+    var uri = $"/dailytemperatures/{createdTemperatureId}";
+    return Results.Created(uri, new { Id = createdTemperatureId });
 })
-.WithName("recordeddailytemperature");
-
-app.MapGet("/dailytemperature", () =>
-{
-    var temperatureService = new DailyTemperatureService();
-    return temperatureService.GenerateTemperature().ToArray();
-})
-.WithName("dailytemperature");
-
-app.MapGet("/newendpoint", () =>
-{
-    return "Hello world!";
-})
-.WithName("newendpoint");
+    .WithName("createDailyTemperature")
+    .AllowAnonymous();
 
 app.Run();
