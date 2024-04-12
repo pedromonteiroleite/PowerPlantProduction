@@ -1,5 +1,6 @@
 using Application.DailyTemperature.Commands.CreateDailyTemperature;
 using Application.DailyTemperature.Queries.GetRecordedDailyTemperatures;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -57,6 +58,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapPost("/register", (UserRegister userRegister) =>
+{
+    var user = new User();
+
+    return Results.Ok;
+})
+    .WithName("resgister")
+    .AllowAnonymous();
 
 app.MapGet("/dailytemperatures", async (IMediator mediator) =>
     await mediator.Send(new GetDailyTemperatureQuery()) is var items
