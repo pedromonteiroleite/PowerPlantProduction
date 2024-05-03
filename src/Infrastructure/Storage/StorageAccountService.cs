@@ -1,35 +1,21 @@
 ﻿using Application.Common.Interfaces;
 using Azure.Identity;
 using Azure.Storage.Blobs;
-using Microsoft.Extensions.Configuration;
+using Infrastructure.Identity;
 
 namespace Infrastructure.Storage;
 
 public class StorageAccountService : IStorageAccountService
 {
 
-    private readonly IConfiguration _configuration;
-
-    public StorageAccountService(IConfiguration configuration)
+    //public async Task DownloadBlob(ClientCredentials clientCredentials, string blobUri, string filePath)
+    //{
+    //    var clientSecretCredential = new ClientSecretCredential(clientCredentials.TenantId, clientCredentials.ClientId, clientCredentials.ClientSecret);
+    //    var client = new BlobClient(new Uri(blobUri), clientSecretCredential);
+    //    await client.DownloadToAsync(filePath);
+    //}
+    public Task DownloadBlob(string blobUri, string filePath)
     {
-        _configuration = configuration;
-
+        throw new NotImplementedException();
     }
-
-    private BlobClient GetClient(string blobUri)
-    {
-        var tenantId = _configuration.GetValue<string>("AzureAD:TenantId");
-        var clientId = _configuration.GetValue<string>("AzureAD:ClientId");
-        var clientSecret = _configuration.GetValue<string>("AzureAD:ClientSecret");
-
-        var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
-        return new BlobClient(new Uri(blobUri), clientSecretCredential);
-    }
-
-    public async Task DownloadBlob(string blobUri, string filePath)
-    {
-        var client = GetClient(blobUri);
-        await client.DownloadToAsync(filePath);
-    }
-
 }

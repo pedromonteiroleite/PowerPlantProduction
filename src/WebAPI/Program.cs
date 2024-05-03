@@ -56,6 +56,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseLoggingMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
 
