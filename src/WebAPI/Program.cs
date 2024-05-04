@@ -1,5 +1,6 @@
 using Application.DailyTemperature.Commands.CreateDailyTemperature;
 using Application.DailyTemperature.Queries.GetRecordedDailyTemperatures;
+using Application.HighTemperatureNotification.Commands.CreateHighTempAlert;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -66,7 +67,7 @@ app.MapPost("/register", (UserRegister userRegister) =>
 
     return Results.Ok;
 })
-    .WithName("resgister")
+    .WithName("register")
     .AllowAnonymous();
 
 app.MapGet("/dailytemperatures", async (IMediator mediator) =>
@@ -84,6 +85,14 @@ app.MapPost("/dailytemperatures", async (CreateDailyTemperatureCommand command, 
     return Results.Created(uri, new { Id = createdTemperatureId });
 })
     .WithName("createDailyTemperature")
+    .AllowAnonymous();
+
+app.MapPost("/hightemperaturenotification", async (CreateHighTempAlertNotification command, IMediator mediator) =>
+{
+    await mediator.Publish(command);
+    return Results.Ok();
+})
+    .WithName("highTemperatureNotification")
     .AllowAnonymous();
 
 app.Run();

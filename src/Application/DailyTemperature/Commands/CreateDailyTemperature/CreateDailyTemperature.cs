@@ -24,8 +24,6 @@ public class CreateDailyTemperatureCommandHandler : IRequestHandler<CreateDailyT
              LowTemp = request.LowTemp
         };
 
-        // TODO: Implement repository.
-
         return Int32.MinValue;
     }
 }
